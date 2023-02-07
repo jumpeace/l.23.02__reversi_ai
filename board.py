@@ -89,12 +89,15 @@ class Board:
             now_piece: Piece = self.data[now_pos.y][now_pos.x]
 
             if pos_index == 0:
+                # 駒を置く位置の隣の駒が敵の駒でない場合
                 if not now_piece.check_enemy(my_piece_kind_key):
                     return []
             
             else:
+                # どこまで裏返すかを探すときに駒がない位置がある場合
                 if now_piece.check_empty():
                     return []
+                # どこまで裏返すかが分かった場合
                 if now_piece.check_me(my_piece_kind_key):
                     return poses_from_pos_to_way[1:pos_index]
     
@@ -120,6 +123,8 @@ class Board:
         if len(reverse_poses) == 0:
             return
         
+        # 駒を置く
         self.data[from_pos.y][from_pos.x].set(my_piece_kind_key)
+        # 駒を裏返す
         for reverse_pos in reverse_poses:
             self.data[reverse_pos.y][reverse_pos.x].set(my_piece_kind_key)

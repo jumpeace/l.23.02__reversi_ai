@@ -24,6 +24,7 @@ class Piece:
             return False
         return  self.data == self.KINDS[kind_key]
     
+    # 駒の情報を文字列に変換
     def __str__(self):
         if self.check_empty():
             return ' '

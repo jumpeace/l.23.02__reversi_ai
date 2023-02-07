@@ -72,29 +72,54 @@ class Board:
         
         return poses
     
-    # 任意の位置から任意の方向への裏返せる枚数を取得
-    def get_reversible_count_from_pos_to_way(self, from_pos: Vector2, way: Vector2, my_piece_kind_key: str) -> int:
+    # 任意の位置から任意の方向への裏返す位置を取得
+    def get_reverse_poses_from_pos_to_way(self, from_pos: Vector2, way: Vector2, my_piece_kind_key: str) -> list[Vector2]:
         poses_from_pos_to_way: list[Vector2] = self.get_poses_from_pos_to_way(from_pos, way)
         
         # 駒を裏返せる分の駒の数がない場合
         if len(poses_from_pos_to_way) < 3:
-            return 0
+            return []
         
         # 駒を置く位置が空でない場合
         if not self.data[poses_from_pos_to_way[0].y][poses_from_pos_to_way[0].x].check_empty():
-            return 0
+            return []
         
         for pos_index in range(1, len(poses_from_pos_to_way)):
             now_pos = poses_from_pos_to_way[pos_index]
-            print(pos_index, now_pos)
             now_piece = self.data[now_pos.y][now_pos.x]
 
             if pos_index == 0:
                 if not now_piece.check_enemy(my_piece_kind_key):
-                    return 0
+                    return []
             
             else:
                 if now_piece.check_empty():
-                    return 0
+                    return []
                 if now_piece.check_me(my_piece_kind_key):
-                    return pos_index - 1
+                    return poses_from_pos_to_way[1:pos_index]
+    
+    # 任意の位置から任意の方向へ裏返せるかを判定
+    def get_reverse_poses_from_pos(self, from_pos: Vector2, my_piece_kind_key: str) -> list[Vector2]:
+        reverse_poses = []
+        
+        for y in range(-1, 2):
+            for x in range(-1, 2):
+                if y == x:
+                    continue
+                
+                for reverse_pos in self.get_reverse_poses_from_pos_to_way(from_pos, Vector2(y, x), my_piece_kind_key):
+                    reverse_poses.append(reverse_pos)
+        
+        return reverse_poses
+    
+    # 任意の位置から任意の方向へ裏返せるかを判定
+    def place(self, from_pos: Vector2, my_piece_kind_key: str):
+        reverse_poses = self.get_reverse_poses_from_pos(from_pos, my_piece_kind_key)
+        
+        # 裏返せる位置がない場合
+        if len(reverse_poses) == 0:
+            return
+        
+        self.data[from_pos.y][from_pos.x].set(my_piece_kind_key)
+        for reverse_pos in reverse_poses:
+            self.data[reverse_pos.y][reverse_pos.x].set(my_piece_kind_key)

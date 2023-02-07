@@ -9,7 +9,7 @@ class Board:
     
     def __init__(self):
         # 盤面のサイズ
-        self.size = 8
+        self.size: int = 8
 
         # 盤面の駒のデータ
         self.data: list[list[Piece]] = []
@@ -22,7 +22,7 @@ class Board:
                 self.data[-1].append(Piece())
         
         # 盤面の半分のサイズ
-        half_size = int(self.size / 2)
+        half_size: int = int(self.size / 2)
         # 真ん中の4つのマスに駒を置く
         self.set(Vector2(half_size - 1, half_size - 1), 'BLACK')
         self.set(Vector2(half_size - 1, half_size), 'WHITE')
@@ -58,7 +58,7 @@ class Board:
     def get_poses_from_pos_to_way(self, from_pos: Vector2, way: Vector2) -> list[Vector2]:
         poses: list[Vector2] = []
 
-        now_pos = from_pos.copy()
+        now_pos: Vector2 = from_pos.copy()
         while True:
             if now_pos.x < 0 or now_pos.x >= self.size:
                 break
@@ -85,8 +85,8 @@ class Board:
             return []
         
         for pos_index in range(1, len(poses_from_pos_to_way)):
-            now_pos = poses_from_pos_to_way[pos_index]
-            now_piece = self.data[now_pos.y][now_pos.x]
+            now_pos: Vector2 = poses_from_pos_to_way[pos_index]
+            now_piece: Piece = self.data[now_pos.y][now_pos.x]
 
             if pos_index == 0:
                 if not now_piece.check_enemy(my_piece_kind_key):
@@ -100,7 +100,7 @@ class Board:
     
     # 任意の位置から任意の方向へ裏返せるかを判定
     def get_reverse_poses_from_pos(self, from_pos: Vector2, my_piece_kind_key: str) -> list[Vector2]:
-        reverse_poses = []
+        reverse_poses: list[Piece] = []
         
         for y in range(-1, 2):
             for x in range(-1, 2):
@@ -114,7 +114,7 @@ class Board:
     
     # 任意の位置から任意の方向へ裏返せるかを判定
     def place(self, from_pos: Vector2, my_piece_kind_key: str):
-        reverse_poses = self.get_reverse_poses_from_pos(from_pos, my_piece_kind_key)
+        reverse_poses: list[Vector2] = self.get_reverse_poses_from_pos(from_pos, my_piece_kind_key)
         
         # 裏返せる位置がない場合
         if len(reverse_poses) == 0:

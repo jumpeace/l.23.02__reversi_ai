@@ -19,10 +19,20 @@ class Piece:
         return self.data is None
     
     # 任意の駒かどうかを判定する
-    def check_kind(self, kind_key: str) -> bool:
+    def check_same(self, kind_key: str) -> bool:
         if self.check_empty():
             return False
         return  self.data == self.KINDS[kind_key]
+    
+    # 任意の駒の敵の駒かどうかを判定する
+    def check_enemy(self, kind_key: str) -> bool:
+        if self.check_empty():
+            return False
+        if kind_key == 'BLACK':
+            return self.data == self.KINDS['WHITE']
+        if kind_key == 'WHITE':
+            return self.data == self.KINDS['BLACK']
+        return False
     
     # 駒の情報を文字列に変換
     def __str__(self):

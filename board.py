@@ -58,17 +58,17 @@ class Board:
     def get_poses_from_pos_to_way(self, from_pos: Vector2, way: Vector2) -> list[Vector2]:
         poses: list[Vector2] = []
 
-        now_pos = Vector2(from_pos.y, from_pos.x)
+        now_pos = from_pos.copy()
         while True:
             if now_pos.x < 0 or now_pos.x >= self.size:
                 break
             if now_pos.y < 0 or now_pos.y >= self.size:
                 break
             
-            poses.append(now_pos)
+            poses.append(now_pos.copy())
             
             now_pos.y += way.y
-            now_pos.x = way.x
+            now_pos.x += way.x
         
         return poses
     
@@ -76,17 +76,18 @@ class Board:
     def get_reversible_count_from_pos_to_way(self, from_pos: Vector2, way: Vector2, my_piece_kind_key: str) -> int:
         poses_from_pos_to_way: list[Vector2] = self.get_poses_from_pos_to_way(from_pos, way)
         
-        # 駒を置く位置が空でない場合
-        if self.data[poses_from_pos_to_way[0].y][poses_from_pos_to_way[0].x].check_empty():
-            return 0
-        
         # 駒を裏返せる分の駒の数がない場合
         if len(poses_from_pos_to_way) < 3:
             return 0
         
-        for pos_index in range(len(poses_from_pos_to_way[1:])):
-            pos_from_pos_to_way = poses_from_pos_to_way[pos_index]
-            now_piece = self.data[pos_from_pos_to_way.y][pos_from_pos_to_way.x]
+        # 駒を置く位置が空でない場合
+        if not self.data[poses_from_pos_to_way[0].y][poses_from_pos_to_way[0].x].check_empty():
+            return 0
+        
+        for pos_index in range(1, len(poses_from_pos_to_way)):
+            now_pos = poses_from_pos_to_way[pos_index]
+            print(pos_index, now_pos)
+            now_piece = self.data[now_pos.y][now_pos.x]
 
             if pos_index == 0:
                 if not now_piece.check_enemy(my_piece_kind_key):

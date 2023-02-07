@@ -10,6 +10,12 @@ class Piece:
         # 駒のデータ
         self.data: str | None = None
     
+    # 駒の情報を文字列に変換
+    def __str__(self) -> str:
+        if self.check_empty():
+            return ' '
+        return self.data
+    
     # 任意の駒を置く(裏返し処理なし)
     def set(self, kind_key: str):
         self.data = self.KINDS[kind_key]
@@ -33,9 +39,3 @@ class Piece:
         if my_kind_key == 'WHITE':
             return self.data == self.KINDS['BLACK']
         return False
-    
-    # 駒の情報を文字列に変換
-    def __str__(self):
-        if self.check_empty():
-            return ' '
-        return self.data

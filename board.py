@@ -28,31 +28,6 @@ class Board:
         self.set(Vector2(half_size - 1, half_size), 'WHITE')
         self.set(Vector2(half_size, half_size - 1), 'WHITE')
         self.set(Vector2(half_size, half_size), 'BLACK')
-    
-    # 盤面を表示
-    def print(self):
-        # 上側部分を描画
-        print('  ', end='')
-        for x in range(self.size):
-            print('  {} '.format(x + 1), end='')
-        print()
-
-        print('  ', end='')
-        for _ in range(self.size):
-            print('+---', end='')
-        print('+')
-
-        # 各列のマスを描画
-        for y in range(self.size):
-            print(' {}'.format(y + 1), end='')
-            for sq in self.data[y]:
-                print('| {} '.format(sq), end='')
-            print('|')
-
-            print('  ', end='')
-            for _ in range(self.size):
-                print('+---', end='')
-            print('+')
 
     # 任意の位置から任意の方向への位置情報の一覧を取得
     def get_poses_from_pos_to_way(self, from_pos: Vector2, way: Vector2) -> list[Vector2]:
@@ -105,12 +80,12 @@ class Board:
     def get_reverse_poses_from_pos(self, from_pos: Vector2, my_piece_kind_key: str) -> list[Vector2]:
         reverse_poses: list[Piece] = []
         
-        for y in range(-1, 2):
-            for x in range(-1, 2):
-                if y == x:
+        for way_y in range(-1, 2):
+            for way_x in range(-1, 2):
+                if way_y == way_x:
                     continue
                 
-                for reverse_pos in self.get_reverse_poses_from_pos_to_way(from_pos, Vector2(y, x), my_piece_kind_key):
+                for reverse_pos in self.get_reverse_poses_from_pos_to_way(from_pos, Vector2(way_y, way_x), my_piece_kind_key):
                     reverse_poses.append(reverse_pos)
         
         return reverse_poses
@@ -128,3 +103,52 @@ class Board:
         # 駒を裏返す
         for reverse_pos in reverse_poses:
             self.data[reverse_pos.y][reverse_pos.x].set(my_piece_kind_key)
+    
+    # 任意の駒の置ける位置の一覧を取得
+    def get_placable_poses(self, my_piece_kind_key: str) -> list[Vector2]:
+        placable_poses: list[Vector2] = []
+        
+        for pos_y in range(self.size):
+            for pos_x in range(self.size):
+                now_pos = Vector2(pos_y, pos_x)
+                reverse_poses = self.get_reverse_poses_from_pos(now_pos, my_piece_kind_key)
+                if len(reverse_poses) > 0:
+                    placable_poses.append(now_pos)
+        
+        return placable_poses
+    
+    # 任意の駒を置こうとしている場合の盤面を表示
+    def print(self, my_piece_kind_key: str):
+        # 任意の駒の置ける位置の一覧
+        placable_poses = self.get_placable_poses(my_piece_kind_key)
+        print([str(pos) for pos in placable_poses])
+        
+        # 上側部分を描画
+        print('  ', end='')
+        for pos_x in range(self.size):
+            print('  {} '.format(pos_x + 1), end='')
+        print()
+
+        print('  ', end='')
+        
+        for _ in range(self.size):
+            print('+---', end='')
+        print('+')
+
+        # 各列のマスを描画
+        for pos_y in range(self.size):
+            print(' {}'.format(pos_y + 1), end='')
+            for pos_x in range(self.size):
+                # 任意の駒の置ける位置の一覧も表示する
+                sq: str = self.data[pos_y][pos_x]
+                if self.data[pos_y][pos_x].check_empty():
+                    if Vector2(pos_y, pos_x) in placable_poses:
+                        sq = '-'
+                
+                print('| {} '.format(sq), end='')
+            print('|')
+
+            print('  ', end='')
+            for _ in range(self.size):
+                print('+---', end='')
+            print('+')

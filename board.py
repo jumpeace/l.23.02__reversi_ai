@@ -91,18 +91,21 @@ class Board:
         return reverse_poses
     
     # 任意の位置から任意の方向へ裏返せるかを判定
-    def place(self, from_pos: Vector2, my_piece_kind_key: str):
+    # ※ 返り値は駒を置けたかどうかを返す
+    def place(self, from_pos: Vector2, my_piece_kind_key: str) -> bool:
         reverse_poses: list[Vector2] = self.get_reverse_poses_from_pos(from_pos, my_piece_kind_key)
         
         # 裏返せる位置がない場合
         if len(reverse_poses) == 0:
-            return
+            return False
         
         # 駒を置く
         self.data[from_pos.y][from_pos.x].set(my_piece_kind_key)
         # 駒を裏返す
         for reverse_pos in reverse_poses:
             self.data[reverse_pos.y][reverse_pos.x].set(my_piece_kind_key)
+        
+        return True
     
     # 任意の駒の置ける位置の一覧を取得
     def get_placable_poses(self, my_piece_kind_key: str) -> list[Vector2]:

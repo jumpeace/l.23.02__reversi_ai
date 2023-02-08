@@ -1,5 +1,5 @@
-from piece import Piece
 from vector2 import Vector2
+from piece import Piece
 
 # 盤面
 class Board:

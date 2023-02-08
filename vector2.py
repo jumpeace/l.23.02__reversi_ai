@@ -10,6 +10,10 @@ class Vector2:
     def __str__(self) -> str:
         return 'Vector2[{}, {}]'.format(self.y, self.x)
     
+    # 2次元座標のの等価比較
+    def __eq__(self, other) -> bool:
+        return self.y == other.y and self.x == other.x
+    
     # 2次元座標の情報をコピー
     def copy(self):
         return Vector2(self.y, self.x)

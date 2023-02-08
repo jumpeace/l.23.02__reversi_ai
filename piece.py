@@ -6,6 +6,13 @@ class Piece:
         'WHITE': 'O',   # 白
     }
     
+    # 敵の駒の種類のキーを取得する
+    def get_enemy_kind_key(my_kind_key: str) -> str:
+        if my_kind_key == 'BLACK':
+            return 'WHITE'
+        if my_kind_key == 'WHITE':
+            return 'BLACK'
+    
     def __init__(self):
         # 駒のデータ
         self.data: str | None = None

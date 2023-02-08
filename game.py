@@ -45,7 +45,7 @@ class Game:
     #  返り値は次のターンを行うかどうか
     def play_one_turn(self) -> bool:
         # 駒を置ける場所も含めて表示する
-        self.board.print(self.my_piece_kind_key)
+        self.board.display(self.my_piece_kind_key)
 
         # 駒を置く位置を入力する
         place_pos = self.input_place_pos_by_human()

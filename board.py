@@ -121,7 +121,7 @@ class Board:
         return placable_poses
     
     # 任意の駒を置こうとしている場合の盤面を表示
-    def print(self, my_piece_kind_key: str):
+    def display(self, my_piece_kind_key: str):
         # 任意の駒の置ける位置の一覧
         placable_poses = self.get_placable_poses(my_piece_kind_key)
         print([str(pos) for pos in placable_poses])

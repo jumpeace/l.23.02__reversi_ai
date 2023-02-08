@@ -1,8 +1,6 @@
-from board import Board
-from vector2 import Vector2
+from game import Game
 
 if __name__ == '__main__':
-    board: Board = Board()
-    board.print()
-    board.place(Vector2(2, 4), 'BLACK')
-    board.print()
+    game: Game = Game()
+    game.play_one_turn()
+    game.play_one_turn()

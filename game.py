@@ -1,6 +1,7 @@
 from vector2 import Vector2
 from piece import Piece
 from board import Board
+from cpu.main import get_place_pos_by_cpu
 
 # ゲームの管理
 class Game:
@@ -11,6 +12,12 @@ class Game:
         self.board: Board = Board()
         # 前回のターンでパスされたか
         self.prev_passed: bool = False
+        self.is_human_dict: dict[str, bool] = {
+            # 先手(黒)が人間かどうか
+            'BLACK': True,
+            # 後手(白)が人間かどうか
+            'WHITE': False,
+        }
     
     # 人間による駒を置く場所の入力
     def input_place_pos_by_human(self) -> Vector2:
@@ -56,6 +63,13 @@ class Game:
         
         return Vector2(tmp_place_pos_y - 1, tmp_place_pos_x - 1)
     
+    # CPUによる駒を置く場所の入力
+    def input_place_pos_by_cpu(self) -> Vector2:
+        place_pos: Vector2 = get_place_pos_by_cpu(self.board, self.my_piece_kind_key)
+        print('{} place [{}, {}].'.format(self.my_piece_kind_key, place_pos.y, place_pos.x))
+
+        return place_pos
+    
     # 相手のターンにする
     def change_turn(self):
         self.my_piece_kind_key = Piece.get_enemy_kind_key(self.my_piece_kind_key)
@@ -63,8 +77,12 @@ class Game:
     # 1ターンの処理を行う
     #  返り値は次のターンを行うかどうか
     def play_one_turn(self) -> bool:
-        # 駒を置ける場所も含めて表示する
-        self.board.display(self.my_piece_kind_key)
+        # 人間のターンかどうか
+        is_human_turn = self.is_human_dict[self.my_piece_kind_key]
+
+        # 駒を置ける場所も含めて表示する(人間のターンのみ)
+        if is_human_turn:
+            self.board.display(self.my_piece_kind_key)
         
         # 全てのマスが埋まっているかを確認
         black_piece_count: int = self.board.get_count_by_piece_kind_key('BLACK')
@@ -73,7 +91,7 @@ class Game:
             return False
         
         # 駒を置ける位置の一覧
-        placable_poses = self.board.get_placable_poses(self.my_piece_kind_key)
+        placable_poses: list[Vector2] = self.board.get_placable_poses(self.my_piece_kind_key)
         # 駒を置けない場合
         if len(placable_poses) == 0:
             # パスすることを表示する
@@ -91,7 +109,12 @@ class Game:
             return True
 
         # 駒を置く位置を入力する
-        place_pos: Vector2 = self.input_place_pos_by_human()
+        # 人間のターンの場合
+        if is_human_turn:
+            place_pos: Vector2 = self.input_place_pos_by_human()
+        # CPUのターンの場合
+        else:
+            place_pos: Vector2 = self.input_place_pos_by_cpu()
 
         # 駒を置く
         self.board.place(place_pos, self.my_piece_kind_key)

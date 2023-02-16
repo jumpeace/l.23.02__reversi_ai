@@ -22,6 +22,12 @@ class Piece:
         if self.check_empty():
             return ' '
         return self.data
+
+    # 駒をコピー
+    def copy(self):
+        copied_instance = Piece()
+        copied_instance.data = self.data
+        return copied_instance
     
     # 任意の駒を置く(裏返し処理なし)
     def set(self, kind_key: str):

@@ -28,6 +28,16 @@ class Board:
         self.set(Vector2(half_size - 1, half_size), 'WHITE')
         self.set(Vector2(half_size, half_size - 1), 'WHITE')
         self.set(Vector2(half_size, half_size), 'BLACK')
+    
+    # 盤面をコピー
+    def copy(self):
+        copied_instance = Board()
+        
+        for y in range(copied_instance.size):
+            for x in range(copied_instance.size):
+                copied_instance.data[y][x] = self.data[y][x].copy()
+        
+        return copied_instance
 
     # 任意の位置から任意の方向への位置情報の一覧を取得
     def get_poses_from_pos_to_way(self, place_pos: Vector2, way: Vector2) -> list[Vector2]:

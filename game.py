@@ -66,7 +66,7 @@ class Game:
     # CPUによる駒を置く場所の入力
     def input_place_pos_by_cpu(self) -> Vector2:
         place_pos: Vector2 = get_place_pos_by_cpu(self.board, self.my_piece_kind_key)
-        print('{} place [{}, {}].'.format(self.my_piece_kind_key, place_pos.y, place_pos.x))
+        print('{} place [{}, {}].'.format(self.my_piece_kind_key, place_pos.y + 1, place_pos.x + 1))
 
         return place_pos
     

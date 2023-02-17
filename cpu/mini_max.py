@@ -73,6 +73,10 @@ def get_place_pos_by_mini_max(board: Board, my_piece_kind_key: str, target_depth
         copied_board.place(placable_pos, my_piece_kind_key)
         eval_value: int = _get_max_eval_value(copied_board, my_piece_kind_key, Piece.get_enemy_kind_key(my_piece_kind_key), target_depth, 1)
         
+        # 駒を置くことができる位置がなかった場合
+        if eval_value is None:
+            continue
+        
         # 一番初めの候補の場合
         if max_eval_value is None:
             max_eval_value = eval_value
@@ -85,4 +89,5 @@ def get_place_pos_by_mini_max(board: Board, my_piece_kind_key: str, target_depth
                 max_eval_value = eval_value
                 place_pos = placable_pos
     
+    # FIXME AttributeError: 'NoneType' object has no attribute 'y'
     return place_pos

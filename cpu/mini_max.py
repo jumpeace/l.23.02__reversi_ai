@@ -14,7 +14,7 @@ def _get_max_eval_value(board: Board, my_piece_kind_key: str, now_piece_kind_key
     placable_poses: list[Vector2] = board.get_placable_poses(my_piece_kind_key)
 
     # 駒を置くことができる位置がない場合
-    if len(placable_poses) > 0:
+    if len(placable_poses) == 0:
         return None
 
     # 評価値の最大値(決められた深さ)
